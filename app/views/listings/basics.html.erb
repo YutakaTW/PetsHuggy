@@ -1,0 +1,64 @@
+<%= render 'partial/navbar' %>
+<div class="container">
+    <div class="col-md-3">
+        <!-- vertical-navbar -->
+        <%= render 'partial/verticalnavbar'%>
+    </div>
+    <div class="col-md-9">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+              <div class="text-center">
+                  <span style="font-size:24px;">Manage your basic information</span>
+              </div>
+          </div>
+
+          <div class="panel-body">           
+              <%= form_for @listing do |f| %>
+                  <div class="row">
+                      <div class="col-md-12 select">
+                          <div class="form-group">
+                              <label>Residence Type</label>
+                              <%= f.select :home_type, [["House","House"], ["Apartment","Apartment"], ["Studio","Studio"]], {prompt:"Select here"}, {required: 'true', autofocus: 'true', class: 'form-control'} %>
+                          </div>
+                      </div>
+                  </div>
+                  <br>
+
+                  <div class="row">
+                      <div class="col-md-12 select">
+                          <div class="form-group">
+                              <label>Pet Type</label>
+                              <%= f.select :pet_type, [["Dogs","Dogs"], ["Cats","Cats"], ["Birds","Birds"], ["Repitiles","Repitiles"], ["Fish","Fish"], ["Amphibians","Amphibians"], ["Others","Others"]], {prompt:"Select here"}, {required: 'true', autofocus: 'true', class: 'form-control'} %>
+                          </div>
+                      </div>
+                  </div>
+                  <br>
+
+                  <div class="row">
+                      <div class="col-md-12 select">
+                          <div class="form-group">
+                              <label>Breedint Experience</label>
+                              <%= f.select :breeding_years, [["Less than a year",1], ["~2 years",2], ["~3 years",3], ["~4 years",4], ["~5 years",5], ["More than 5 years",6]], {prompt:"Select here"}, {required: 'true', autofocus: 'true', class: 'form-control'} %>
+                          </div>
+                      </div>
+                  </div>
+                  <br>
+
+                  <div class="row">
+                      <div class="col-md-12 select">
+                          <div class="form-group">
+                              <label>Pet Size</label>
+                              <%= f.select :pet_size, [["Small","Small"], ["Medium","Medium"], ["Large","Large"], ["Extra large","Extra large"]], {prompt:"Select here"}, {required: 'true', autofocus: 'true', class: 'form-control'} %>
+                          </div>
+                      </div>
+                  </div>
+                  <br>
+
+                  <div class="actions">
+                      <%= f.submit "Save", class: "btn btn-danger" %>
+                  </div>
+              <% end %>
+          </div>
+      </div>
+  </div>
+</div>

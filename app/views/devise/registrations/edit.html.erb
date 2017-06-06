@@ -1,0 +1,50 @@
+<%= render 'partial/navbar' %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3 row-space-4">
+    <!-- Link to profile -->
+    <%= link_to "See your current profile", user_path(current_user), class: "btn btn-default btn-full" %>
+    </div>
+
+    <div class="col-md-9">
+      <div class="panel panel-default">
+        <div class="panel-heading">Edit profile</div>
+        <div class="panel-body">
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+            <%= render 'partial/deviseErrorMsg' %>
+
+            <div class="form-group">
+              <%= f.text_field :name, autofocus: true, :placeholder => "名前", :class => 'form-control' %>
+            </div>
+
+            <div class="form-group">
+              <%= f.email_field :email, :placeholder => "Email", :class => 'form-control' %>
+            </div>
+
+            <div class="form-group">
+              <%= f.text_field :phone_number, :placeholder => "Phone number", :class => 'form-control' %>
+            </div>
+
+            <div class="form-group">
+              <%= f.text_area :description, rows: 5, cols: 25,  :placeholder => "Describe yourself", :class => 'form-control' %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :new_password %> <i>(Leave here empty if you don't intend to change)</i><br />
+              <%= f.password_field :password, autocomplete: "off", :class => 'form-control' %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :new_password_confirmation %><br />
+              <%= f.password_field :password_confirmation, autocomplete: "off", :class => 'form-control' %>
+            </div>
+
+            <div class="actions">
+              <%= f.submit "Update profile", :class => "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
