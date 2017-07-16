@@ -1,11 +1,14 @@
 class ListingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_listing, only: [:update, :basics, :description, :address, :price, :photos, :calendar, :payment, :publish]
+  before_action :set_listing, only: [:show, :update, :basics, :description, :address, :price, :photos, :calendar, :payment, :publish]
+  before_action :access_deny, only: [:basics, :description, :address, :price, :photos, :calendar, :payment, :publish]
 
   def index
+    @listings = current_user.listings
   end
 
   def show
+    @photos = @listing.photos
   end
 
   def new
@@ -52,6 +55,8 @@ class ListingsController < ApplicationController
   end
 
   def payment
+    @user = @listing.user
+    session[:listing_id] = @listing.id
   end
 
   def publish
@@ -59,10 +64,16 @@ class ListingsController < ApplicationController
 
   private
   def listing_params
-    params.require(:listing).permit(:home_type, :pet_type, :breeding_years, :pet_size, :price_pernight)
+    params.require(:listing).permit(:home_type, :pet_type, :breeding_years, :pet_size, :price_pernight, :address, :listing_title, :listing_content, :active)
   end
 
   def set_listing
     @listing = Listing.find(params[:id])
+  end
+
+  def access_deny
+    if !(current_user == @listing.user)
+      redirect_to root_path, notice: "Listing management pages of other users are not accessible"
+    end
   end
 end
