@@ -275,6 +275,6 @@ Devise.setup do |config|
     when 'production'
       config.omniauth :facebook, ENV["facebook_app_id"], ENV["facebook_app_secret"], scope: 'email', info_fields: 'email,name', secure_image_url: true
     when 'development'
-      config.omniauth :facebook, "113355949309313", "954d128982b050959e0e98bc4088dba7", scope: 'email', info_fields: 'email,name', secure_image_url: true
+      config.omniauth :facebook, "1376431455744875", "a78f6cc8727de566fc84903abe3bf7e6", scope: 'email', info_fields: 'email,name', secure_image_url: true
   end
 end
