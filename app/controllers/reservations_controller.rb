@@ -86,7 +86,8 @@ class ReservationsController < ApplicationController
         flash[:error] = "Charge failed! #{error}"
       end
 
-      # 予約をパラメーター付与して作成/戻るボタンでも予約完了noticeがでてしまう
+      # 予約をパラメーター付与して作成
+      # 一度予約完了し、もう一度別日程で予約をするとき、reservations/new.html.erbから戻るボタンでも予約完了noticeがでてしまう
       @reservation = current_user.reservations.create(reservation_params)
       redirect_to @reservation.listing, notice: "Booking complete!"
     end
