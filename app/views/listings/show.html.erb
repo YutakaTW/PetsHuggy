@@ -1,3 +1,5 @@
+<!-- this page includes bugs -->
+
 <%= render 'partial/navbar' %>
 
 <!-- ジャンボトロン -->
@@ -94,7 +96,12 @@
                                           <%= f.text_field :start_date, :class => 'form-control', placeholder: 'MM/DD/YYYY' %>
                                     </div>
 
-                                    <!-- チェックアウト日が空欄のままでも先に進めてしまう(stripe paymentでエラーが出るので予約完了はしない)。チェックアウト日をちゃんと選択しているにもかかわらず、stripe paymentででたらめなメールアドレスを入れて、認証失敗というところを経て予約完了したとき、合計金額は表示されるもののDBにチェックアウト日が入らないというバグがあった。同じ認証失敗を経て再度やってみたら、それは起こらなかった。 -->
+<!-- bugs...
+1. チェックアウト日が空欄のままでも先に進めてしまう(stripe paymentでエラーが出るので予約完了はしない)。Checkin/outが同じ日でも予約に進めてしまう。
+2. チェックアウト日をちゃんと選択しているにもかかわらず、stripe paymentででたらめなメールアドレスを入れて、認証失敗というところを経て予約完了したとき、合計金額は表示されるもののDBにチェックアウト日が入らないというバグがあった。同じ認証失敗を経て再度やってみたら、それは起こらなかった。
+3. reservations#createで、you have requested blank amount for 'source'というエラーがでたことがある。
+4. 50 jpy以下はstripeのエラーになる。
+-->
                                     <div class="col-md-6">
                                         <label>Check-out</label>
                                         <%= f.text_field :end_date, :class => 'form-control', placeholder: 'MM/DD/YYYY', disabled:true %>
@@ -165,11 +172,15 @@
 
 
     <!-- レビュー    -->
-    <div class="row">
+    <div class="row row-space-4">
         <div class="col-md-9">
-          <h3 class="row-space-3">Reviews</h3>
+          <h3><%= @reviews.count %> reviews</h3>
+          <div id="average_star_rate" class="row-space-4"></div>
+            <%= render 'reviews/form' if @currentUserBooking && !@currentUserReview %>
+            <%= render 'reviews/list' %>
         </div>
 
+        <!-- いらないけど書いておきましょう -->
         <div class="col-md-3">
         </div>
     </div>
@@ -415,4 +426,12 @@ $(function() {
     }
   });
 });
+</script>
+
+<script>
+  $('#average_star_rate').raty({
+    path: '/assets',
+    readOnly: true,
+    score: <%= @listing.average_star_rate %>
+  });
 </script>

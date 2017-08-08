@@ -1,0 +1,23 @@
+<!-- review routes is nested -->
+<%= form_for([@listing, @listing.reviews.new]) do |f| %>
+  <div id="rate_stars"></div>
+
+  <!-- can post without comment, can post to own listing, can detelte others' comments, what if there are too many comments? -->
+  <div class="form-group">
+    <%= f.text_area :description, rows: 3, class: "form-control" %>
+  </div>
+
+  <%= f.hidden_field :listing_id, value: @listing.id %>
+
+  <div class="actions">
+    <%= f.submit "Write a review", class: "btn btn-danger" %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  $("#rate_stars").raty({
+    path: '/assets',
+    scoreName: 'review[rate]',
+    score: 0
+  });
+</script>
