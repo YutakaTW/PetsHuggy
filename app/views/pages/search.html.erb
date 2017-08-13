@@ -132,7 +132,7 @@ function initMap() {
     });
   });
 
-  //google mapがドラッグされた時の処理
+  //google mapがドラッグされた時の処理(ransackはリセットされてしまう=>geocoderの範囲を1000milesとかにすればドラッグ検索機能は不要か)
   google.maps.event.addListener(map, 'dragend', function() {
     //すべてのinfowindowを消す
     infowindows.forEach(function(infowindow) {

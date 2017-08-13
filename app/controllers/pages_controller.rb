@@ -1,4 +1,6 @@
 class PagesController < ApplicationController
+  require 'date'
+
   def index #views/index.html.erbを表示させるというアクション
     @users = User.all
   end
@@ -20,7 +22,7 @@ class PagesController < ApplicationController
         @longitude = geolocation[1]
       end
 
-    @listings = Listing.where(active: true).near(geolocation, 5, order: 'distance')
+    @listings = Listing.where(active: true).near(geolocation, 20, order: 'distance')
 
     # 検索欄が空欄の場合
     else
@@ -81,7 +83,7 @@ class PagesController < ApplicationController
     @result = @search.result(distinct: true)
 
     #リスティングデータを配列にしてまとめる
-    @arrlistings = @listings.to_a
+    @arrlistings = @result.to_a
 
     # start_date end_dateの間に予約がないことを確認.あれば削除
     if ( !params[:start_date].blank? && !params[:end_date].blank? )
@@ -89,26 +91,24 @@ class PagesController < ApplicationController
       session[:start_date] = params[:start_date]
       session[:end_date] = params[:end_date]
 
-      start_date = Date.parse(session[:start_date])
-      end_date = Date.parse(session[:end_date])
+      start_date = DateTime.parse(session[:start_date])
+      end_date = DateTime.parse(session[:end_date])
+
+      unavailables = []
 
       @listings.each do |listing|
 
         # check the listing is availble between start_date to end_date
-        unavailable = listing.reservations.where(
-            "(? <= start_date AND start_date <= ?)
-              OR (? <= end_date AND end_date <= ?)
-              OR (start_date < ? AND ? < end_date)",
-            start_date, end_date,
-            start_date, end_date,
-            start_date, end_date
-        ).limit(1)
+        unavailable = listing.reservations.where("(start_date < ? AND ? < end_date) OR (start_date < ? AND ? < end_date) OR (? <= start_date AND end_date <= ?)", start_date, start_date, end_date, end_date, start_date, end_date).limit(1)
 
-        # delete unavailable room from @listings
+
         if unavailable.length > 0
-          @arrlistings.delete(listing)
+          unavailables << listing
         end
       end
+
+      # delete unavailable room from @listings
+      @arrlistings = @arrlistings - unavailables
     end
   end
 
@@ -123,7 +123,7 @@ class PagesController < ApplicationController
       session[:address] = params[:location]
     end
 
-    @listings = Listing.where(active: true).near(geolocation, 5, order: 'distance')
+    @listings = Listing.where(active: true).near(geolocation, 20, order: 'distance')
 
     #リスティングデータを配列にしてまとめる
     @arrlistings = @listings.to_a
@@ -131,26 +131,24 @@ class PagesController < ApplicationController
     # start_date end_dateの間に予約がないことを確認.あれば削除
     if ( !session[:start_date].blank? && !session[:end_date].blank? )
 
-      start_date = Date.parse(session[:start_date])
-      end_date = Date.parse(session[:end_date])
+      start_date = DateTime.parse(session[:start_date])
+      end_date = DateTime.parse(session[:end_date])
+
+      unavailables = []
 
       @listings.each do |listing|
 
         # check the listing is availble between start_date to end_date
-        unavailable = listing.reservations.where(
-            "(? <= start_date AND start_date <= ?)
-              OR (? <= end_date AND end_date <= ?)
-              OR (start_date < ? AND ? < end_date)",
-            start_date, end_date,
-            start_date, end_date,
-            start_date, end_date
-        ).limit(1)
+        unavailable = listing.reservations.where("(start_date < ? AND ? < end_date) OR (start_date < ? AND ? < end_date) OR (? <= start_date AND end_date <= ?)", start_date, start_date, end_date, end_date, start_date, end_date).limit(1)
 
-        # delete unavailable room from @listings
+
         if unavailable.length > 0
-          @arrlistings.delete(listing)
+          unavailables << listing
         end
       end
+
+      # delete unavailable room from @listings
+      @arrlistings = @arrlistings - unavailables
     end
 
     respond_to :js
