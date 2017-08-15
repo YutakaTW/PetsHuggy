@@ -16,6 +16,6 @@
 //= require jquery-ui/widgets/datepicker
 //= require private_pub
 //= require toastr
-//= require jquery_ujs
+
 //= require turbolinks
 //= require_tree .
