@@ -87,6 +87,7 @@
 
       <div class="row">
         <% @users.each do |user|%>
+        <!-- publishしてなくても表示されてしまうので、active?を加えるべき -->
           <% if !user.listings.blank? %>
             <div class="col-md-4 col-sm-6 portfolio-item row-space-2">
               <%= link_to listing_path(user.listings[0]) do %>
